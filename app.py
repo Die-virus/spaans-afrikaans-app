@@ -5,8 +5,9 @@ import unicodedata
 import difflib  # ingebou in Python
 
 # Laai jou JSON databasis
-with open(r"C:\Users\moste\OneDrive\Documents\spaans_afrikaans_engels.json", "r", encoding="utf-8") as f:
+with open("spaans_afrikaans_engels.json", "r", encoding="utf-8") as f:
     vocabulary = json.load(f)
+
 
 st.title("Taaltoets: Spaans ⇄ Afrikaans ⇄ Engels")
 

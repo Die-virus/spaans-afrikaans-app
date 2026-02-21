@@ -4,10 +4,9 @@ import random
 import unicodedata
 import difflib  # ingebou in Python
 
-# Laai jou JSON databasis
+# Laai jou JSON databasis (maak seker die file is in dieselfde repo/folder)
 with open("spaans_afrikaans_engels.json", "r", encoding="utf-8") as f:
     vocabulary = json.load(f)
-
 
 st.title("Taaltoets: Spaans ⇄ Afrikaans ⇄ Engels")
 
@@ -17,6 +16,7 @@ def normalize(word):
 def similarity(a, b):
     return difflib.SequenceMatcher(None, a, b).ratio()
 
+# Kies toets rigting en aantal woorde
 direction = st.selectbox(
     "Kies toets rigting:",
     ["Afrikaans → Spaans", "Spaans → Afrikaans", "Engels → Spaans", "Spaans → Engels"]
@@ -26,7 +26,7 @@ num_words = st.slider("Hoeveel woorde wil jy toets?", 5, 50, 10)
 
 quiz_words = random.sample(vocabulary, num_words)
 
-# Gebruik 'n form sodat die app nie elke keer refresh nie
+# Gebruik 'n form sodat die app net rerun op submit
 with st.form(key="quiz_form"):
     answers = []
     for i, entry in enumerate(quiz_words, start=1):
@@ -54,24 +54,25 @@ with st.form(key="quiz_form"):
 
     submitted = st.form_submit_button("Klaar")
 
-    if submitted:
-        score = 0
-        for answer, correct_word in answers:
-            if answer:
-                ans_norm = normalize(answer)
-                corr_norm = normalize(correct_word)
-                sim = similarity(ans_norm, corr_norm)
+# Score word net bereken as jy submit
+if submitted:
+    score = 0
+    for answer, correct_word in answers:
+        if answer:
+            ans_norm = normalize(answer)
+            corr_norm = normalize(correct_word)
+            sim = similarity(ans_norm, corr_norm)
 
-                if sim == 1.0:
-                    st.success("✅ Perfek gespeld!")
-                    score += 1
-                elif sim >= 0.8:
-                    st.warning(f"⚠️ Klein foutjies, maar aanvaarbaar ({round(sim*100)}% reg).")
-                    score += 1
-                else:
-                    st.error(f"❌ Verkeerd. Regte antwoord: {correct_word}")
+            if sim == 1.0:
+                st.success("✅ Perfek gespeld!")
+                score += 1
+            elif sim >= 0.8:
+                st.warning(f"⚠️ Klein foutjies, maar aanvaarbaar ({round(sim*100)}% reg).")
+                score += 1
+            else:
+                st.error(f"❌ Verkeerd. Regte antwoord: {correct_word}")
 
-        st.write(f"Jou totaal: {score} / {num_words}")
+    st.write(f"Jou totaal: {score} / {num_words}")
 
 # Knoppie om nuwe toets te begin
 if st.button("Nuwe toets begin"):

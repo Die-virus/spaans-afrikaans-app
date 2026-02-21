@@ -2,7 +2,7 @@ import streamlit as st
 import json
 import random
 import unicodedata
-import Levenshtein  # pip install python-Levenshtein
+import difflib  # ingebou in Python, geen installasie nodig
 
 # Laai jou JSON databasis
 with open("spaans_afrikaans_engels.json", "r", encoding="utf-8") as f:
@@ -13,6 +13,10 @@ st.title("Taaltoets: Spaans ⇄ Afrikaans ⇄ Engels")
 # Normaliseer Unicode (sodat á ≠ a)
 def normalize(word):
     return unicodedata.normalize("NFC", word.strip().lower())
+
+# Bereken similarity tussen antwoorde
+def similarity(a, b):
+    return difflib.SequenceMatcher(None, a, b).ratio()
 
 # Kies toets rigting
 direction = st.selectbox(
@@ -50,13 +54,13 @@ for i, entry in enumerate(quiz_words, start=1):
     if answer:
         ans_norm = normalize(answer)
         corr_norm = normalize(correct_word)
-        diff = Levenshtein.distance(ans_norm, corr_norm)
+        sim = similarity(ans_norm, corr_norm)
 
-        if diff == 0:
+        if sim == 1.0:
             st.success("✅ Perfek gespeld!")
             score += 1
-        elif diff <= 2:
-            st.warning(f"⚠️ Klein foutjies ({diff} verskille), maar aanvaarbaar.")
+        elif sim >= 0.8:
+            st.warning(f"⚠️ Klein foutjies, maar aanvaarbaar ({round(sim*100)}% reg).")
             score += 1
         else:
             st.error(f"❌ Verkeerd. Regte antwoord: {correct_word}")

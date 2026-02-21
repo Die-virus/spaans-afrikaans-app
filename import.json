@@ -1,0 +1,29 @@
+import streamlit as st
+import json
+import random
+
+# Laai jou JSON databasis
+with open("spaans_afrikaans_engels.json", "r", encoding="utf-8") as f:
+    vocabulary = json.load(f)
+
+st.title("Spaans ⇄ Afrikaans ⇄ Engels Woordelys")
+
+# Soek funksie
+search_word = st.text_input("Tik 'n Spaanse woord in:")
+if search_word:
+    found = [entry for entry in vocabulary if entry["spanish"].lower() == search_word.lower()]
+    if found:
+        entry = found[0]
+        st.write(f"🇪🇸 Spaans: {entry['spanish']}")
+        st.write(f"🇿🇦 Afrikaans: {', '.join(entry['afrikaans'])}")
+        st.write(f"🇬🇧 Engels: {', '.join(entry.get('english', ['(nog nie bygevoeg nie)']))}")
+        st.write(f"📊 Frekwensie: {entry['frequency']} | Genormaliseer: {entry['normalized']}")
+    else:
+        st.warning("Geen vertaling gevind nie.")
+
+# Random woord knoppie
+if st.button("Gee my 'n random woord"):
+    entry = random.choice(vocabulary)
+    st.write(f"🇪🇸 Spaans: {entry['spanish']}")
+    st.write(f"🇿🇦 Afrikaans: {', '.join(entry['afrikaans'])}")
+    st.write(f"🇬🇧 Engels: {', '.join(entry.get('english', ['(nog nie bygevoeg nie)']))}")

@@ -32,22 +32,22 @@ with st.form(key="quiz_form"):
     for i, entry in enumerate(quiz_words, start=1):
         if direction == "Afrikaans → Spaans":
             st.write(f"{i}. 🇿🇦 Afrikaans: {entry['afrikaans'][0]}")
-            answer = st.text_input("Tik die Spaanse vertaling in:", key=f"q{i}")
+            answer = st.text_area("Tik die Spaanse vertaling in:", key=f"q{i}")
             correct_word = entry["spanish"]
 
         elif direction == "Spaans → Afrikaans":
             st.write(f"{i}. 🇪🇸 Spaans: {entry['spanish']}")
-            answer = st.text_input("Tik die Afrikaanse vertaling in:", key=f"q{i}")
+            answer = st.text_area("Tik die Afrikaanse vertaling in:", key=f"q{i}")
             correct_word = entry["afrikaans"][0]
 
         elif direction == "Engels → Spaans":
             st.write(f"{i}. 🇬🇧 Engels: {entry['english'][0]}")
-            answer = st.text_input("Tik die Spaanse vertaling in:", key=f"q{i}")
+            answer = st.text_area("Tik die Spaanse vertaling in:", key=f"q{i}")
             correct_word = entry["spanish"]
 
         elif direction == "Spaans → Engels":
             st.write(f"{i}. 🇪🇸 Spaans: {entry['spanish']}")
-            answer = st.text_input("Tik die Engelse vertaling in:", key=f"q{i}")
+            answer = st.text_area("Tik die Engelse vertaling in:", key=f"q{i}")
             correct_word = entry["english"][0]
 
         answers.append((answer, correct_word))
